@@ -1,0 +1,118 @@
+:root {
+  --red: #d32f3c;
+  --blue: #2457d6;
+  --bg: #f5f6f8;
+  --card: #fff;
+  --text: #1c1e24;
+  --muted: #5d6270;
+  --line: #dde0e6;
+  --t: 250ms;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1000px; margin: 0 auto; padding: 1rem; }
+[hidden] { display: none !important; }
+
+h1 { font-size: clamp(1.4rem, 4vw, 2rem); margin: .5rem 0; }
+h1 .vs { color: var(--muted); font-weight: 400; }
+h1::first-letter { color: var(--red); }
+h2 { font-size: 1.2rem; margin-top: 0; }
+
+.statusline { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; min-height: 2rem; }
+.badge { padding: .2rem .7rem; border-radius: 999px; font-weight: 600; background: var(--line); }
+.badge.running { background: #1f7a3d; color: #fff; }
+.badge.stopped { background: #8a5a00; color: #fff; }
+.badge.done { background: #333; color: #fff; }
+.active { color: var(--muted); font-size: .9rem; display: inline-flex; align-items: center; gap: .4rem; }
+.dot { width: .6rem; height: .6rem; border-radius: 50%; background: #1f7a3d; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+
+.controls, .panel, .stats, .results {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; margin: 1rem 0;
+}
+.quick { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+.quick .field small { display: none; }
+.buttons { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+
+button, select, input { font: inherit; }
+button {
+  padding: .6rem 1.2rem; border-radius: 8px; border: 1px solid #b9bec9; background: #fff; color: var(--text); cursor: pointer;
+}
+button.primary { background: var(--text); color: #fff; border-color: var(--text); }
+button:disabled { opacity: .4; cursor: not-allowed; }
+button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid #f0a500; outline-offset: 2px; }
+
+.field { display: flex; flex-direction: column; gap: .25rem; min-width: 12rem; margin-bottom: .75rem; }
+.field label { font-weight: 600; font-size: .9rem; }
+.field .next { font-weight: 400; color: var(--muted); }
+.field small { color: var(--muted); font-size: .8rem; max-width: 40rem; }
+.field.check { flex-direction: row; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.field.check small { flex-basis: 100%; }
+.field input[type=checkbox] { width: 1.2rem; height: 1.2rem; }
+.row { display: flex; gap: .5rem; }
+select, input[type=number] { padding: .45rem; border: 1px solid #b9bec9; border-radius: 6px; background: #fff; min-width: 7rem; }
+input[type=number] { width: 9rem; }
+fieldset { border: 1px solid var(--line); border-radius: 8px; margin: 0 0 1rem; padding: .75rem 1rem 0; }
+legend { font-weight: 700; padding: 0 .3rem; }
+.dirty { color: #8a5a00; font-weight: 600; }
+
+.tabs { display: flex; gap: .25rem; border-bottom: 2px solid var(--line); flex-wrap: wrap; }
+.tabs button { border: none; border-radius: 8px 8px 0 0; background: transparent; padding: .7rem 1rem; color: var(--muted); }
+.tabs button[aria-selected=true] { background: var(--card); color: var(--text); font-weight: 700; box-shadow: inset 0 -3px 0 var(--text); }
+
+.note { color: var(--muted); font-size: .85rem; }
+
+/* Knipperende vierkanten */
+.squares { display: flex; justify-content: center; gap: 6%; padding: 1.5rem 0; }
+.sq { width: min(36vw, 240px); aspect-ratio: 1; border-radius: 10px; transition: opacity 60ms linear; }
+.sq.red { background: var(--red); }
+.sq.blue { background: var(--blue); }
+.squares.static .sq { opacity: .25; }
+.squares.static.on .sq { opacity: 1; }
+.squares.soft .sq { transition-duration: 450ms; }
+.squares.blinking[data-phase="0"] .sq.blue,
+.squares.blinking[data-phase="1"] .sq.red { opacity: 0; }
+
+/* Live kleurverdeling */
+.legend { font-weight: 600; padding: .4rem .7rem; border-radius: 6px; border-left: 4px solid; }
+.legend.actual { background: #eef6ef; border-color: #1f7a3d; }
+.legend.amplified { background: #fff5e0; border-color: #c27c00; }
+.bar { position: relative; display: flex; height: clamp(90px, 18vw, 160px); border-radius: 10px; overflow: hidden; margin: 1rem 0; }
+.part { height: 100%; display: flex; align-items: center; color: #fff; font-weight: 700; white-space: nowrap; overflow: hidden;
+  transition: width var(--t) ease-out; }
+.part.red { background: var(--red); justify-content: flex-start; padding-left: .7rem; }
+.part.blue { background: var(--blue); justify-content: flex-end; padding-right: .7rem; }
+.part span { font-size: clamp(.75rem, 2.2vw, 1rem); text-shadow: 0 1px 2px rgba(0,0,0,.4); }
+.bar.nonums .part span { display: none; }
+.midline { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.35); }
+.midline span { position: absolute; top: 2px; left: 4px; font-size: .7rem; color: #fff; text-shadow: 0 1px 2px #000; }
+.explain summary { cursor: pointer; font-weight: 600; }
+
+/* Statistieken */
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: .75rem; }
+.stat { display: flex; flex-direction: column; padding: .5rem .75rem; border-radius: 8px; background: var(--bg); }
+.stat span { font-size: .8rem; color: var(--muted); }
+.stat b { font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.stat small { color: var(--muted); font-variant-numeric: tabular-nums; }
+.stat.red { border-left: 5px solid var(--red); }
+.stat.red b { color: var(--red); }
+.stat.blue { border-left: 5px solid var(--blue); }
+.stat.blue b { color: var(--blue); }
+
+.results dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .5rem 1rem; margin: 0; }
+.results dt { font-size: .8rem; color: var(--muted); }
+.results dd { margin: 0; font-size: 1.15rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.interp { font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { animation: none; }
+}
+@media (max-width: 520px) {
+  main { padding: .5rem; }
+  .field { min-width: 100%; }
+  .stat b { font-size: 1.3rem; }
+  .buttons button { flex: 1; }
+}

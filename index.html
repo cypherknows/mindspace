@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rood vs Blauw — Random Experiment</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Rood <span class="vs">vs</span> Blauw — Random Experiment</h1>
+      <div class="statusline">
+        <span id="statusBadge" class="badge ready" role="status">Klaar</span>
+        <span id="activeInd" class="active" hidden><span class="dot"></span>Randomgenerator actief (<span id="activeKind"></span>)</span>
+      </div>
+    </header>
+
+    <section class="controls" aria-label="Sessie">
+      <div class="quick" data-fields="runMode,durationSec,targetRate"></div>
+      <div class="buttons">
+        <button id="startBtn" class="primary">Start</button>
+        <button id="stopBtn" disabled>Stop</button>
+        <button id="resetBtn" disabled>Reset</button>
+      </div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="Weergave">
+      <button role="tab" data-tab="blink" aria-controls="panel-blink">Knipperende vierkanten</button>
+      <button role="tab" data-tab="bar" aria-controls="panel-bar">Live kleurverdeling</button>
+      <button role="tab" data-tab="settings" aria-controls="panel-settings">Instellingen</button>
+    </nav>
+
+    <section id="panel-blink" role="tabpanel" class="panel" hidden>
+      <div id="squares" class="squares static" aria-hidden="true">
+        <div class="sq red"></div>
+        <div class="sq blue"></div>
+      </div>
+      <p class="note">De vierkanten wisselen in een vast ritme. Ze worden níet door de randomgenerator gestuurd; die rekent op de achtergrond door.</p>
+      <div class="quick" data-fields="blinkRate"></div>
+    </section>
+
+    <section id="panel-bar" role="tabpanel" class="panel" hidden>
+      <p id="legend" class="legend"></p>
+      <div id="bar" class="bar" role="img" aria-label="Kleurverdeling rood en blauw">
+        <div id="barRed" class="part red"><span id="barRedLbl"></span></div>
+        <div id="barBlue" class="part blue"><span id="barBlueLbl"></span></div>
+        <div id="midline" class="midline"><span>50%</span></div>
+      </div>
+      <div class="quick" data-fields="viewScale,visualSensitivity,autoSensitivity"></div>
+      <details class="explain">
+        <summary>Uitleg over de twee weergaven</summary>
+        <p><b>Werkelijke verhouding:</b> de breedte van rood en blauw is precies het echte percentage. Bij 50,6% rood is 50,6% van de balk rood. Kleine afwijkingen zijn zo nauwelijks te zien.</p>
+        <p><b>Versterkte afwijking:</b> de middenlijn is exact 50/50. De afwijking van 50% wordt met de gevoeligheidsfactor vermenigvuldigd: bij factor 10 wordt 50,6% rood in beeld 56% rood en 44% blauw. De echte percentages en aantallen staan altijd in de cijfers.</p>
+      </details>
+    </section>
+
+    <section id="panel-settings" role="tabpanel" class="panel" hidden>
+      <form id="settingsGroups" onsubmit="return false"></form>
+      <div class="buttons">
+        <button id="saveBtn" class="primary">Instellingen opslaan</button>
+        <button id="undoBtn">Wijzigingen ongedaan maken</button>
+        <button id="defaultsBtn">Standaardinstellingen herstellen</button>
+      </div>
+      <p><span id="dirty" class="dirty" hidden>Er zijn niet-opgeslagen wijzigingen. </span><span id="settingsMsg" role="status"></span></p>
+      <p class="note">Wijzigingen werken meteen, maar alleen “Instellingen opslaan” bewaart ze voor een volgend bezoek. Sessieresultaten worden niet opgeslagen.</p>
+    </section>
+
+    <div id="statsWrap">
+      <section class="stats" aria-label="Live statistieken">
+        <div class="stat red"><span>Rood</span><b id="sRed">0</b><small id="sRedPct">–</small></div>
+        <div class="stat blue"><span>Blauw</span><b id="sBlue">0</b><small id="sBluePct">–</small></div>
+        <div class="stat"><span>Totaal uitkomsten</span><b id="sTotal">0</b></div>
+        <div class="stat"><span>Verschil rood − blauw</span><b id="sDiff">0</b></div>
+        <div class="stat"><span>Afwijking rood t.o.v. 50%</span><b id="sDev">–</b><small id="sRelDev"></small></div>
+        <div class="stat"><span>Verstreken tijd</span><b id="sElapsed">0:00,0</b></div>
+        <div class="stat"><span>Resterende tijd</span><b id="sRemaining">–</b></div>
+        <div class="stat"><span>Gerealiseerd per seconde</span><b id="sRate">–</b><small id="sTarget"></small></div>
+        <div class="stat"><span>Visualisatieschaal</span><b id="sScale">–</b></div>
+      </section>
+
+      <section id="results" class="results" hidden aria-live="polite">
+        <h2 id="resultsTitle">Resultaten</h2>
+        <div id="resultsBody"></div>
+        <p class="note">De z-score en p-waarde zijn beschrijvend en gaan uit van een eerlijke, onafhankelijke 50/50-generator als nulmodel (normale benadering). Ze zijn geen bewijs van mentale beïnvloeding. Afwijkingen ontstaan ook door toeval. Hoe betrouwbaar de interpretatie is, hangt af van het aantal uitkomsten en van het vooraf vastleggen van de analyse. Hoe vaker je het experiment herhaalt, hoe groter de kans dat je toevallig een opvallende uitslag vindt.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
